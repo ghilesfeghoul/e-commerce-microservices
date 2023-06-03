@@ -7,9 +7,9 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## Laravel Ambassador
+## E-Commerce Referral App
 
-This is a laravel project built with a monolithic approach. It contains such of Api endpoints, which use a different concepts, such as events, jwt tokens for authentication, CRUD, laravel commands, seeders, database factories and more. It uses also a set of tools as Stripe for checkout, Mailhog for catching emails locally and Redis for memory cache. 
+This is a laravel project built with a monolithic approach. It contains such of Api endpoints, which use a different concepts, such as events, jwt tokens for authentication, CRUD, laravel commands, seeders, database factories and more. It uses also a set of tools as Stripe for checkout, Mailhog for catching emails locally and Redis for memory cache.
 
 It uses docker containers for local development and can also be deployed with this approach on whatever Cloud platform you want such as Google Cloud Platform, Amazon Web Services or Microsof Azure. For this purpose, some changes are needed to be performed.
 
@@ -23,26 +23,37 @@ It uses docker containers for local development and can also be deployed with th
 ## Installation guide
 
 First, clone this repo with this command
-    
-    git clone https://github.com/ghilesfeghoul/ambassador.git
+
+    git clone https://github.com/ghilesfeghoul/e-commerce-referral-app.git
 
 Then move to the ambassador directory and install all dependencies
 
-    cd ambassador
+    cd e-commerce-referral-app
     composer install
 
 After that, create .env file
 
-    mv .env.example .env
+    cp .env.example .env
 
-Make sure you have a Stripe account as a development mode and copy the secret to .env in a STRIPE_SECRET variable. 
+Make sure you have a Stripe account as a development mode and copy the secret to .env in a STRIPE_SECRET variable.
 
-Add also CHECKOUT_URL variable needed for the checkout side of the API. This variable is in the fact, the Frontend url, but by default, it can be set to your backend url while we have no frontend for now. 
+Add also CHECKOUT_URL variable needed for the checkout side of the API. This variable is in the fact, the Frontend url, but by default, it can be set to your backend url while we have no frontend for now.
+
+Make sure you add the right variables for mailing and db services
 
     #.env file
     ...
+    DB_CONNECTION=mysql
+    DB_HOST=db
+    DB_PORT=3306
+    DB_DATABASE=ambassador
+    DB_USERNAME=root
+    DB_PASSWORD=root
+    MAIL_HOST=ambassador_mailhog
+    MAIL_PORT=1025
     STRIPE_SECRET=<YOUR_STRIPE_SECRET_VARIABLE>
     CHECKOUT_URL=<FRONTEND_APP_URL>
+
 
 After that, start all docker containers
 
