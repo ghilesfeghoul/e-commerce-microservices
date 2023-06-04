@@ -39,13 +39,13 @@ class OrderCompleted implements ShouldQueue
             $message->subject('An Order has been completed');
             $message->to('admin@admin.com');
         });
-        var_dump('[DONE] Sending email to admin...');
+        var_dump('[DONE] Email sent to admin...');
 
         var_dump('[IN_PROGRESS] Sending email to ambassador...');
         \Mail::send('ambassador', ['order' => $order], function (Message $message) use ($order) {
             $message->subject('An Order has been completed');
             $message->to($order['ambassador_email']);
         });
-        var_dump('[DONE] Sending email to ambassador...');
+        var_dump('[DONE] Email sent to ambassador...');
     }
 }
