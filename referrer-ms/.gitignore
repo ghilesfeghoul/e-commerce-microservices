@@ -17,3 +17,4 @@ composer.lock
 *.http
 /.idea
 /.editorconfig
+/docker

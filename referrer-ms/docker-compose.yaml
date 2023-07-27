@@ -1,0 +1,66 @@
+version: '3.9'
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    command: 'php artisan serve --host=0.0.0.0'
+
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: referrer
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - ./storage/dbdata:/var/lib/mysql
+    ports:
+      - "33066:3306"
+
+  mailhog:
+    container_name: referrer_mailhog
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - "1025:1025" # smtp server
+      - "8025:8025" # web ui
+
+  redis:
+    image: redis
+    ports:
+      - "6380:6379"
+
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: admin-rabbitmq
+    restart: always
+    volumes:
+      - ./docker/rabbitmq/data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: referrer_phpmyadmin
+    restart: always
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+    ports:
+      - "127.0.0.1:84:80"
+    volumes:
+      - /sessions
+    links:
+      - db
+
+networks:
+  default:
+    name: "reward-network"
