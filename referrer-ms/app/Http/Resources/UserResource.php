@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            $this->mergeWhen($request->path() === 'api/ambassador/user', [
+            $this->mergeWhen($request->path() === 'api/referrer/user', [
                 'revenue' => $this->revenue
             ])
         ];

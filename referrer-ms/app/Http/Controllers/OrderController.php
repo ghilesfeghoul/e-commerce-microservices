@@ -11,6 +11,8 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use Cartalyst\Stripe\Stripe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
 {
@@ -21,8 +23,28 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|email',
+            'address' => 'required|string',
+            'country' => 'required|string',
+            'city' => 'required|string',
+            'zip' => 'required|string',
+            'products' => 'required|array|min:1'
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'errors' => $validator->errors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         if (!$link = Link::where('code', $request->input('code'))->first()) {
-            abort(400, 'Invalid code');
+            return response([
+                'error' => 'Invalid code'
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         try {
@@ -90,7 +112,7 @@ class OrderController extends Controller
 
             return response([
                 'error' => $e->getMessage()
-            ], 400);
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 

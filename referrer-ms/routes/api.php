@@ -6,7 +6,6 @@ use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StatsController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,7 +47,7 @@ Route::prefix('admin')->group(function () {
 
 
 //Ambassador
-Route::prefix('ambassador')->group(function () {
+Route::prefix('referrer')->group(function () {
     common('scope.ambassador');
 
     Route::get('products/frontend', [ProductController::class, 'frontend']);
