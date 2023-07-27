@@ -2,6 +2,8 @@ version: "3.9"
 services:
   email_queue:
     container_name: email_queue
+    networks:
+      reward-network:
     build: .
     ports:
       - "8001:8000"
@@ -13,6 +15,8 @@ services:
 
   email_ms_db:
     container_name: email_ms_db
+    networks:
+      reward-network:
     image: mysql:8
     restart: always
     environment:
@@ -26,9 +30,15 @@ services:
 
   email_mailhog:
     container_name: email_mailhog
+    networks:
+      reward-network:
     image: mailhog/mailhog
     logging:
       driver: 'none'  # disable saving logs
     ports:
       - "1026:1025" # smtp server
       - "8026:8025" # web ui
+
+networks:
+  reward-network:
+    external: true
