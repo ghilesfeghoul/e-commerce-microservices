@@ -11,11 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    private UserService $userService;
-
-    public function __construct() {
-        $this->userService = new UserService(env('USERS_MS'));
-    }
+    public function __construct(
+        private UserService $userService
+    ) { }
 
     public function register(RegisterRequest $request)
     {

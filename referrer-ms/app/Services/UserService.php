@@ -3,8 +3,8 @@ namespace App\Services;
 
 class UserService extends ApiService
 {
-    public function __construct(string $endpoint)
+    public function __construct()
     {
-        $this->endpoint = $endpoint;
+        $this->endpoint = env('USERS_MS');
     }
 }

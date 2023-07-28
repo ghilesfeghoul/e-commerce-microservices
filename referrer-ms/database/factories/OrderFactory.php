@@ -27,8 +27,8 @@ class OrderFactory extends Factory
 
         return [
             'code' => $link->code,
-            'user_id' => $link->user->id,
-            'ambassador_email' => $link->user->email,
+            'user_id' => $link->user_id,
+            'ambassador_email' => $this->faker->email,
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'email' => $this->faker->email,

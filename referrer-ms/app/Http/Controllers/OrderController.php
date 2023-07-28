@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\OrderCompletedEvent;
 use App\Http\Resources\OrderResource;
 use App\Jobs\OrderCompleted;
 use App\Models\Link;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Services\UserService;
 use Cartalyst\Stripe\Stripe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,6 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
 {
+    public function __construct(
+        private UserService $userService
+    ) { }
+
     public function index()
     {
         return OrderResource::collection(Order::with('orderItems')->get());
@@ -52,9 +56,11 @@ class OrderController extends Controller
 
             $order = new Order();
 
+            $user = $this->userService->get("users/{$link->user_id}");
+
             $order->code = $link->code;
-            $order->user_id = $link->user->id;
-            $order->ambassador_email = $link->user->email;
+            $order->user_id = $user['id'];
+            $order->ambassador_email = $user['email'];
             $order->first_name = $request->input('first_name');
             $order->last_name = $request->input('last_name');
             $order->email = $request->input('email');
@@ -132,7 +138,7 @@ class OrderController extends Controller
         $array['admin_revenue'] = $order->admin_revenue;
         $array['order_items'] = $order->orderItems->toArray();
 
-        OrderCompleted::dispatch($array)->onQueue('email_queue');
+        OrderCompleted::dispatch($array)->onQueue(env('EMAIL_QUEUE','email_queue'));
 
         return [
             'message' => 'success'

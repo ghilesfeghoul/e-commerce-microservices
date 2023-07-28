@@ -2,24 +2,32 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
 class UpdateRankingsCommand extends Command
 {
+    public function __construct(
+        private UserService $userService
+    ) {
+        parent::__construct();
+    }
+
     protected $signature = 'update:rankings';
 
     public function handle()
     {
-        $ambassadors = User::ambassadors()->get();
+        $users = collect($this->userService->get('users'));
+
+        $ambassadors = $users->filter(fn($user) => $user['is_admin'] === 0);
 
         $bar = $this->output->createProgressBar($ambassadors->count());
 
         $bar->start();
 
-        $ambassadors->each(function (User $user) use ($bar) {
-            Redis::zadd('rankings', (int)$user->revenue, $user->name);
+        $ambassadors->each(function ($user) use ($bar) {
+            Redis::zadd('rankings', (int)$user['evenue'], $user['name']);
 
             $bar->advance();
         });

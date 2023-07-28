@@ -34,13 +34,11 @@ function common(string $scope)
 Route::prefix('admin')->group(function () {
     common('scope.admin');
 
-    Route::middleware(['auth:sanctum', 'scope.admin'])->group(function () {
-        Route::get('ambassadors', [AmbassadorController::class, 'index']);
-        Route::get('users/{id}/links', [LinkController::class, 'index']);
-        Route::get('orders', [OrderController::class, 'index']);
+    Route::get('ambassadors', [AmbassadorController::class, 'index']);
+    Route::get('users/{id}/links', [LinkController::class, 'index']);
+    Route::get('orders', [OrderController::class, 'index']);
 
-        Route::apiResource('products', ProductController::class);
-    });
+    Route::apiResource('products', ProductController::class);
 });
 
 
@@ -51,11 +49,9 @@ Route::prefix('referrer')->group(function () {
     Route::get('products/frontend', [ProductController::class, 'frontend']);
     Route::get('products/backend', [ProductController::class, 'backend']);
 
-    Route::middleware(['auth:sanctum', 'scope.ambassador'])->group(function () {
-        Route::post('links', [LinkController::class, 'store']);
-        Route::get('stats', [StatsController::class, 'index']);
-        Route::get('rankings', [StatsController::class, 'rankings']);
-    });
+    Route::post('links', [LinkController::class, 'store']);
+    Route::get('stats', [StatsController::class, 'index']);
+    Route::get('rankings', [StatsController::class, 'rankings']);
 });
 
 //Checkout
