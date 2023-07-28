@@ -64,4 +64,19 @@ class AuthController extends Controller
 
         return response($user, Response::HTTP_ACCEPTED);
     }
+
+    public function users()
+    {
+        return User::all();
+    }
+
+    public function canScope(Request $request, string $scope)
+    {
+        return $request->user()->tokenCan($scope);
+    }
+
+    public function getUser(string $id)
+    {
+        return User::find($id);
+    }
 }
