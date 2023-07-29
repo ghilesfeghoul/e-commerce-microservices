@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Link;
 use App\Models\LinkProduct;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,11 +15,8 @@ class LinkCreated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public mixed $data;
+    public $data;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct($data)
     {
         $this->data = $data;
@@ -26,8 +24,10 @@ class LinkCreated implements ShouldQueue
 
     /**
      * Execute the job.
+     *
+     * @return void
      */
-    public function handle(): void
+    public function handle()
     {
         Link::create([
             'id' => $this->data['id'],

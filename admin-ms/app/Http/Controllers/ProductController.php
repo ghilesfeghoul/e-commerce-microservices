@@ -21,6 +21,7 @@ class ProductController extends Controller
         $product = Product::create($request->only('title', 'description', 'image', 'price'));
 
         ProductCreated::dispatch($product->toArray())->onQueue(env('REFERRER_QUEUE', 'referrer_queue'));
+        ProductCreated::dispatch($product->toArray())->onQueue(env('CHECKOUT_QUEUE', 'checkout_queue'));
 
         return response($product, Response::HTTP_CREATED);
     }
@@ -35,6 +36,7 @@ class ProductController extends Controller
         $product->update($request->only('title', 'description', 'image', 'price'));
 
         ProductUpdated::dispatch($product->toArray())->onQueue(env('REFERRER_QUEUE', 'referrer_queue'));
+        ProductUpdated::dispatch($product->toArray())->onQueue(env('CHECKOUT_QUEUE', 'checkout_queue'));
 
         return response($product, Response::HTTP_ACCEPTED);
     }
@@ -44,6 +46,7 @@ class ProductController extends Controller
         $product->delete();
 
         ProductDeleted::dispatch($product->toArray())->onQueue(env('REFERRER_QUEUE', 'referrer_queue'));
+        ProductDeleted::dispatch($product->toArray())->onQueue(env('CHECKOUT_QUEUE', 'checkout_queue'));
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

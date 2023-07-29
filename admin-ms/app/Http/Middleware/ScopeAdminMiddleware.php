@@ -6,7 +6,7 @@ use App\Services\UserService;
 use Closure;
 use Illuminate\Http\Request;
 
-class ScopeAmbassadorMiddleware
+class ScopeAdminMiddleware
 {
     public function __construct(
         private UserService $userService
@@ -21,7 +21,7 @@ class ScopeAmbassadorMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $response = $this->userService->getRequest('get', 'scope/ambassador');
+        $response = $this->userService->getRequest('get', 'scope/admin');
 
         if (!$response->ok()) {
             abort(401, 'unauthorized');
