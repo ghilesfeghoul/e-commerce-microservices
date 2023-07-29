@@ -23,7 +23,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::put('users/info', [AuthController::class, 'updateInfo']);
     Route::put('users/password', [AuthController::class, 'updatePassword']);
-    Route::put('scope/{scope}', [AuthController::class, 'canScope']);
+    Route::get('scope/{scope}', [AuthController::class, 'canScope']);
 });
 
 Route::get('users', [AuthController::class, 'users']);
