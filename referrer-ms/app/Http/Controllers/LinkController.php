@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\LinkResource;
+use App\Jobs\LinkCreated;
 use App\Models\Link;
 use App\Models\LinkProduct;
 use App\Models\Product;
@@ -17,14 +17,6 @@ class LinkController extends Controller
     public function __construct(
         private UserService $userService
     ) { }
-
-    public function index($id)
-    {
-        $user = $this->userService->get("users/{$id}");
-        $links = Link::with('orders')->where('user_id', $user['id'])->get();
-
-        return LinkResource::collection($links);
-    }
 
     public function store(Request $request)
     {
@@ -54,12 +46,21 @@ class LinkController extends Controller
             'code' => Str::random(6)
         ]);
 
+        $linkProducts = [];
+
         foreach ($request->input('products') as $product_id) {
-            LinkProduct::create([
+            $linkProduct = LinkProduct::create([
                 'link_id' => $link->id,
                 'product_id' => $product_id
             ]);
+
+            $linkProducts[] = $linkProduct->toArray();
         }
+
+        $array = $link->toArray();
+        $array['link_products'] = $linkProducts;
+
+        LinkCreated::dispatch($array)->onQueue(env('ADMIN_QUEUE', 'admin_queue'));
 
         return $link;
     }

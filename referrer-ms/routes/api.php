@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-function common(string $scope)
-{
+//Ambassador
+Route::prefix('referrer')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
@@ -28,23 +28,6 @@ function common(string $scope)
     Route::post('logout', [AuthController::class, 'logout']);
     Route::put('users/info', [AuthController::class, 'updateInfo']);
     Route::put('users/password', [AuthController::class, 'updatePassword']);
-}
-
-//Admin
-Route::prefix('admin')->group(function () {
-    common('scope.admin');
-
-    Route::get('ambassadors', [AmbassadorController::class, 'index']);
-    Route::get('users/{id}/links', [LinkController::class, 'index']);
-    Route::get('orders', [OrderController::class, 'index']);
-
-    Route::apiResource('products', ProductController::class);
-});
-
-
-//Ambassador
-Route::prefix('referrer')->group(function () {
-    common('scope.ambassador');
 
     Route::get('products/frontend', [ProductController::class, 'frontend']);
     Route::get('products/backend', [ProductController::class, 'backend']);

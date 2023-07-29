@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\LinkResource;
 use App\Models\Link;
+use App\Services\UserService;
 
 class LinkController extends Controller
 {

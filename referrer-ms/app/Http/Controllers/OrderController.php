@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\OrderResource;
 use App\Jobs\OrderCompleted;
 use App\Models\Link;
 use App\Models\Order;
@@ -19,11 +18,6 @@ class OrderController extends Controller
     public function __construct(
         private UserService $userService
     ) { }
-
-    public function index()
-    {
-        return OrderResource::collection(Order::with('orderItems')->get());
-    }
 
     public function store(Request $request)
     {
@@ -139,6 +133,7 @@ class OrderController extends Controller
         $array['order_items'] = $order->orderItems->toArray();
 
         OrderCompleted::dispatch($array)->onQueue(env('EMAIL_QUEUE','email_queue'));
+        OrderCompleted::dispatch($array)->onQueue(env('ADMIN_QUEUE','admin_queue'));
 
         return [
             'message' => 'success'
