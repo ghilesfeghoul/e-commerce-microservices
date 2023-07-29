@@ -41,6 +41,7 @@ class LinkController extends Controller
         }
 
         $user = $this->userService->get('user');
+
         $link = Link::create([
             'user_id' => $user['id'],
             'code' => Str::random(6)
@@ -61,14 +62,7 @@ class LinkController extends Controller
         $array['link_products'] = $linkProducts;
 
         LinkCreated::dispatch($array)->onQueue(env('ADMIN_QUEUE', 'admin_queue'));
-
-        return $link;
-    }
-
-    public function show($code)
-    {
-        $link = Link::with('products')->where('code', $code)->first();
-        $link['users'] = collect($this->userService->get('users'))->filter(fn($user) => $user['id'] === $link->user_id);
+        LinkCreated::dispatch($array)->onQueue(env('CHECKOUT_QUEUE', 'checkout_queue'));
 
         return $link;
     }
