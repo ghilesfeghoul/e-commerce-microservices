@@ -19,7 +19,7 @@ class AuthController extends Controller
     {
         $user = $this->userService->post('register',
             $request->only('first_name', 'last_name', 'email', 'password')
-            + ['is_admin' => $request->path() === 'api/admin/register' ? 1 : 0]
+            + ['is_admin' => 1]
         );
 
         return response($user, Response::HTTP_CREATED);
@@ -27,8 +27,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $scope = $request->path() === 'api/admin/login' ? 'admin' : 'ambassador';
-        $data = $request->only('email', 'password') + ['scope' => $scope];
+        $data = $request->only('email', 'password') + ['scope' => 'admin'];
 
         $response = $this->userService->post("login", $data);
 
