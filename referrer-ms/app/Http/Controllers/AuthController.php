@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\Order;
 
 class AuthController extends Controller
 {
@@ -19,7 +20,7 @@ class AuthController extends Controller
     {
         $user = $this->userService->post('register',
             $request->only('first_name', 'last_name', 'email', 'password')
-            + ['is_admin' => $request->path() === 'api/admin/register' ? 1 : 0]
+            + ['is_admin' => 0]
         );
 
         return response($user, Response::HTTP_CREATED);
@@ -27,8 +28,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $scope = $request->path() === 'api/admin/login' ? 'admin' : 'ambassador';
-        $data = $request->only('email', 'password') + ['scope' => $scope];
+        $data = $request->only('email', 'password') + ['scope' => 'ambassador'];
 
         $response = $this->userService->post("login", $data);
 
@@ -41,7 +41,13 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        return $this->userService->get('user');
+        $user = $this->userService->get('user');
+        
+        $orders = Order::where('user_id', $user['id'])->get();
+
+        $user['revenue'] = $orders->sum(fn(Order $order) => $order->total);
+
+        return $user;
     }
 
     public function logout()
