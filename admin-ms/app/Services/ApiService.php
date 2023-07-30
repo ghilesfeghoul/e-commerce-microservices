@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 abstract class ApiService
@@ -20,7 +21,7 @@ abstract class ApiService
 
     public function getRequest($method, $path, $data = [])
     {
-        return \Http::acceptJson()->withHeaders([
+        return Http::acceptJson()->withHeaders([
             'Authorization' => 'Bearer ' . request()->cookie('jwt')
         ])->$method("{$this->endpoint}/{$path}", $data);
     }

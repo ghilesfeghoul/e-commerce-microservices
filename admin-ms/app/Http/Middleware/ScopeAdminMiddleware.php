@@ -23,7 +23,7 @@ class ScopeAdminMiddleware
     {
         $response = $this->userService->getRequest('get', 'scope/admin');
 
-        if (!$response->ok()) {
+        if (!$response->ok() || $response->getBody()->getContents() !== "1") {
             abort(401, 'unauthorized');
         }
 

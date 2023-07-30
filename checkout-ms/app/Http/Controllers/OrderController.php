@@ -135,6 +135,7 @@ class OrderController extends Controller
 
         OrderCompleted::dispatch($array)->onQueue(env('EMAIL_QUEUE','email_queue'));
         OrderCompleted::dispatch($array)->onQueue(env('ADMIN_QUEUE','admin_queue'));
+        OrderCompleted::dispatch($array)->onQueue(env('REFERRER_QUEUE','referrer_queue'));
 
         return [
             'message' => 'success'

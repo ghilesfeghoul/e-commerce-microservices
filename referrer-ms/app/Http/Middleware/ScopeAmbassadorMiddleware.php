@@ -23,7 +23,7 @@ class ScopeAmbassadorMiddleware
     {
         $response = $this->userService->getRequest('get', 'scope/ambassador');
 
-        if (!$response->ok()) {
+        if (!$response->ok() || $response->getBody()->getContents() !== 1) {
             abort(401, 'unauthorized');
         }
 
